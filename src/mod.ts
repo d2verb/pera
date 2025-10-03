@@ -9,7 +9,7 @@ export type PeraOptions = {
   moduleUrl: string;
   rootId?: string;
   hmr?: boolean;
-}
+};
 
 export function serve(opts: PeraOptions) {
   const port = opts.port ?? 8080;
@@ -51,10 +51,15 @@ export function serve(opts: PeraOptions) {
           headers: { "content-type": "application/javascript; charset=utf-8" },
         });
       } catch (e) {
-        return new Response(`// read error: ${e instanceof Error ? e.message : "unknown error"}`, {
-          status: 500,
-          headers: { "content-type": "application/javascript; charset=utf-8" },
-        });
+        return new Response(
+          `// read error: ${e instanceof Error ? e.message : "unknown error"}`,
+          {
+            status: 500,
+            headers: {
+              "content-type": "application/javascript; charset=utf-8",
+            },
+          },
+        );
       }
     }
 
@@ -66,7 +71,9 @@ export function serve(opts: PeraOptions) {
 
           for await (const ev of Deno.watchFs(appFile)) {
             if (ev.kind === "modify") {
-              controller.enqueue(enc.encode(`event: hot-reload\ndata: hot-reload\n\n`));
+              controller.enqueue(
+                enc.encode(`event: hot-reload\ndata: hot-reload\n\n`),
+              );
             }
           }
         },
@@ -76,7 +83,7 @@ export function serve(opts: PeraOptions) {
           "content-type": "text/event-stream",
           "cache-control": "no-cache",
           "connection": "keep-alive",
-        }
+        },
       });
     }
 
@@ -91,7 +98,9 @@ export function serve(opts: PeraOptions) {
         </head>
         <body>
           <div id="${rootId}"></div>
-          <script>window.__PERA_PROPS__ = ${JSON.stringify(opts.props ?? {})}</script>
+          <script>window.__PERA_PROPS__ = ${
+      JSON.stringify(opts.props ?? {})
+    }</script>
           <script type="module" src="/_pera/client.js"></script>
         </body>
       </html>
