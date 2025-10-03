@@ -14,7 +14,7 @@ with just a single `.tsx` file. The name pera comes from the japanese word
 ## Quick Start
 
 ```bash
-deno run --allow-net --allow-read --allow-env page.tsx
+deno run -A page.tsx
 ```
 
 ### Example
@@ -36,7 +36,7 @@ export function App({ initial = 0 }: Props) {
 }
 
 if (import.meta.main) {
-  const { serve } = await import("jsr:pera");
+  const { serve } = await import("jsr:@d2verb/pera");
   await serve({
     port: 8080,
     title: "Counter Sample",
