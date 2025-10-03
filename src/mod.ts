@@ -1,0 +1,73 @@
+import { PeraOptions } from "./types.ts";
+import { escapeHtml, filePathFromModuleUrl } from "./utils.ts";
+import { transpile } from "@deno/emit";
+
+export function serve(opts: PeraOptions) {
+  const port = opts.port ?? 8080;
+  const title = opts.title ?? "Pera App";
+  const rootId = opts.rootId ?? "root";
+  const appFile = filePathFromModuleUrl(opts.moduleUrl);
+
+  const importMap = opts.importMap ?? {
+    imports: {
+      "preact": "https://esm.sh/preact@10",
+    }
+  };
+
+  const handler = async (req: Request) => {
+    const url = new URL(req.url);
+
+    if (url.pathname === "/_pera/client.js") {
+      const code = `
+        import { h, render } from "preact";
+        import { App } from "/_pera/app.js";
+        const el = document.getElementById("${rootId}");
+        const props = window.__PERA_PROPS__ ?? {};
+        render(h(App, props), el);
+      `;
+      return new Response(code, {
+        headers: { "content-type": "application/javascript; charset=utf-8" },
+      });
+    }
+
+    if (url.pathname === "/_pera/app.js") {
+      try {
+        // Transpile the app file from tsx to js
+        const url = new URL("file://" + appFile);
+        const result = await transpile(url);
+        const code = result.get(url.href);
+        return new Response(code, {
+          headers: { "content-type": "application/javascript; charset=utf-8" },
+        });
+      } catch (e) {
+        return new Response(`// read error: ${e instanceof Error ? e.message : "unknown error"}`, {
+          status: 500,
+          headers: { "content-type": "application/javascript; charset=utf-8" },
+        });
+      }
+    }
+
+    const html = `
+      <!doctype html>
+      <html lang="ja">
+        <head>
+          <meta charset="utf-8" />
+          <meta name="viewport" content="width=device-width, initial-scale=1" />
+          <title>${escapeHtml(title)}</title>
+          <script type="importmap">${JSON.stringify(importMap)}</script>
+        </head>
+        <body>
+          <div id="${rootId}"></div>
+          <script>window.__PERA_PROPS__ = ${JSON.stringify(opts.props ?? {})}</script>
+          <script type="module" src="/_pera/client.js"></script>
+        </body>
+      </html>
+    `;
+
+    return new Response(html, {
+      headers: { "content-type": "text/html; charset=utf-8" },
+    });
+  };
+
+  Deno.serve({ port }, handler);
+}
