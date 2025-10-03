@@ -74,7 +74,8 @@
   "redirects": {
     "https://esm.sh/preact/hooks": "https://esm.sh/preact@10.27.2/hooks",
     "https://esm.sh/preact/jsx-runtime": "https://esm.sh/preact@10.27.2/jsx-runtime",
-    "https://esm.sh/preact@10/hooks": "https://esm.sh/preact@10.27.2/hooks"
+    "https://esm.sh/preact@10/hooks": "https://esm.sh/preact@10.27.2/hooks",
+    "https://esm.sh/preact@10/jsx-runtime": "https://esm.sh/preact@10.27.2/jsx-runtime"
   },
   "remote": {
     "https://esm.sh/preact@10.27.2/denonext/hooks.mjs": "aeca6fd4003b6f3df4805684d0f1fd63fa881e4501bfddcba276a5d23250b9ce",

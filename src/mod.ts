@@ -1,6 +1,15 @@
-import type { PeraOptions } from "./types.ts";
 import { escapeHtml, filePathFromModuleUrl } from "./utils.ts";
 import { transpile } from "@deno/emit";
+
+export type PeraOptions = {
+  port?: number;
+  title?: string;
+  // deno-lint-ignore no-explicit-any
+  props?: Record<string, any>;
+  moduleUrl: string;
+  rootId?: string;
+  hmr?: boolean;
+}
 
 export function serve(opts: PeraOptions) {
   const port = opts.port ?? 8080;
