@@ -7,7 +7,6 @@ export type PeraOptions = {
   props?: Record<string, any>;
   moduleUrl: string;
   rootId?: string;
-  importMap?: { imports: Record<string, string> };
   hmr?: boolean;
 }
 

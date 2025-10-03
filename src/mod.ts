@@ -9,18 +9,12 @@ export function serve(opts: PeraOptions) {
   const appFile = filePathFromModuleUrl(opts.moduleUrl);
   const hmr = opts.hmr ?? true;
 
-  const importMap = opts.importMap ?? {
-    imports: {
-      "preact": "https://esm.sh/preact@10",
-    }
-  };
-
   const handler = async (req: Request) => {
     const url = new URL(req.url);
 
     if (url.pathname === "/_pera/client.js") {
       const code = `
-        import { h, render } from "preact";
+        import { h, render } from "https://esm.sh/preact@10";
         import { App } from "/_pera/app.js";
         const el = document.getElementById("${rootId}");
         const props = window.__PERA_PROPS__ ?? {};
@@ -84,7 +78,6 @@ export function serve(opts: PeraOptions) {
           <meta charset="utf-8" />
           <meta name="viewport" content="width=device-width, initial-scale=1" />
           <title>${escapeHtml(title)}</title>
-          <script type="importmap">${JSON.stringify(importMap)}</script>
           <script src="https://cdn.tailwindcss.com"></script>
         </head>
         <body>

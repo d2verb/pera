@@ -1,5 +1,5 @@
-/** @jsxImportSource https://esm.sh/preact */
-import { useState } from "https://esm.sh/preact/hooks";
+/** @jsxImportSource https://esm.sh/preact@10 */
+import { useState } from "https://esm.sh/preact@10/hooks";
 
 type Props = { initial?: number };
 
@@ -17,7 +17,7 @@ export function App({ initial = 0 }: Props) {
 }
 
 if (import.meta.main) {
-    const { serve } = await import("jsr:@d2verb/pera");
+    const { serve } = await import("../src/mod.ts");
     await serve({
         port: 8080,
         title: "Counter Sample",
