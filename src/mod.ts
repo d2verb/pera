@@ -55,6 +55,7 @@ export function serve(opts: PeraOptions) {
           <meta name="viewport" content="width=device-width, initial-scale=1" />
           <title>${escapeHtml(title)}</title>
           <script type="importmap">${JSON.stringify(importMap)}</script>
+          <script src="https://cdn.tailwindcss.com"></script>
         </head>
         <body>
           <div id="${rootId}"></div>
