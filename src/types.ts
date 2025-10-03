@@ -8,6 +8,7 @@ export type PeraOptions = {
   moduleUrl: string;
   rootId?: string;
   importMap?: { imports: Record<string, string> };
+  hmr?: boolean;
 }
 
 // deno-lint-ignore no-explicit-any

@@ -1,4 +1,4 @@
-import { PeraOptions } from "./types.ts";
+import type { PeraOptions } from "./types.ts";
 import { escapeHtml, filePathFromModuleUrl } from "./utils.ts";
 import { transpile } from "@deno/emit";
 
@@ -7,6 +7,7 @@ export function serve(opts: PeraOptions) {
   const title = opts.title ?? "Pera App";
   const rootId = opts.rootId ?? "root";
   const appFile = filePathFromModuleUrl(opts.moduleUrl);
+  const hmr = opts.hmr ?? true;
 
   const importMap = opts.importMap ?? {
     imports: {
@@ -24,6 +25,13 @@ export function serve(opts: PeraOptions) {
         const el = document.getElementById("${rootId}");
         const props = window.__PERA_PROPS__ ?? {};
         render(h(App, props), el);
+        if (${hmr}) {
+          const es = new EventSource("/_pera/hmr");
+          es.addEventListener("hot-reload", () => {
+            console.info("[HMR] reloading...");
+            location.reload();
+          });
+        }
       `;
       return new Response(code, {
         headers: { "content-type": "application/javascript; charset=utf-8" },
@@ -45,6 +53,28 @@ export function serve(opts: PeraOptions) {
           headers: { "content-type": "application/javascript; charset=utf-8" },
         });
       }
+    }
+
+    if (url.pathname === "/_pera/hmr") {
+      const stream = new ReadableStream({
+        async start(controller) {
+          const enc = new TextEncoder();
+          controller.enqueue(enc.encode("retry: 2000\n\n"));
+
+          for await (const ev of Deno.watchFs(appFile)) {
+            if (ev.kind === "modify") {
+              controller.enqueue(enc.encode(`event: hot-reload\ndata: hot-reload\n\n`));
+            }
+          }
+        },
+      });
+      return new Response(stream, {
+        headers: {
+          "content-type": "text/event-stream",
+          "cache-control": "no-cache",
+          "connection": "keep-alive",
+        }
+      });
     }
 
     const html = `
