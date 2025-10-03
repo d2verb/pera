@@ -20,17 +20,32 @@ deno run -A page.tsx
 ### Example
 
 ```tsx
-/** @jsxImportSource https://esm.sh/preact */
-import { useState } from "https://esm.sh/preact/hooks";
+/** @jsxImportSource https://esm.sh/preact@10 */
+import { useState } from "https://esm.sh/preact@10/hooks";
 
 type Props = { initial?: number };
 
 export function App({ initial = 0 }: Props) {
   const [counter, setCounter] = useState(initial);
   return (
-    <div>
-      <h1>{counter}</h1>
-      <button type="button" onClick={() => setCounter(counter + 1)}>+</button>
+    <div className="flex flex-col items-center justify-center h-screen gap-4">
+      <h1 className="text-4xl font-bold">{counter}</h1>
+      <div className="flex gap-4">
+        <button
+          type="button"
+          className="bg-red-500 text-white px-4 py-2 rounded-md"
+          onClick={() => setCounter(counter - 1)}
+        >
+          -
+        </button>
+        <button
+          type="button"
+          className="bg-blue-500 text-white px-4 py-2 rounded-md"
+          onClick={() => setCounter(counter + 1)}
+        >
+          +
+        </button>
+      </div>
     </div>
   );
 }

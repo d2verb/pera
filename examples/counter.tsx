@@ -17,7 +17,7 @@ export function App({ initial = 0 }: Props) {
 }
 
 if (import.meta.main) {
-    const { serve } = await import("../src/mod.ts");
+    const { serve } = await import("jsr:@d2verb/pera");
     await serve({
         port: 8080,
         title: "Counter Sample",
