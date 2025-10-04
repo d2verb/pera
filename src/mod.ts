@@ -22,7 +22,7 @@ import type { PeraOptions } from "./types.ts";
  *
  * @param opts The options for the Pera app.
  */
-export async function serve(opts: PeraOptions) {
+export async function serve(opts: PeraOptions): Promise<void> {
   if (!import.meta.main) return;
 
   const { serveImpl } = await import("./server.ts");
