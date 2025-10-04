@@ -11,11 +11,10 @@ export type ApiContext = {
   params: Record<string, string | undefined>;
 };
 
-export type ApiFn =
-  | ((req: Request, ctx: ApiContext) => Response | Promise<Response>)
-  | ((ctx: ApiContext) => Response | Promise<Response>)
-  | ((req: Request) => Response | Promise<Response>)
-  | (() => Response | Promise<Response>);
+export type ApiFn = (
+  req: Request,
+  ctx: ApiContext,
+) => Response | Promise<Response>;
 
 export type ApiMethodMap = Partial<Record<ApiMethod, ApiFn>>;
 

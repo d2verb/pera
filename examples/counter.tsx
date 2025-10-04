@@ -14,7 +14,7 @@ export function App({ initial = 0 }: Props) {
       setMessage(data);
     };
     fetchMessage();
-  }, [message]);
+  }, []);
 
   return (
     <div className="flex flex-col items-center justify-center h-screen gap-4">
@@ -41,8 +41,7 @@ export function App({ initial = 0 }: Props) {
 }
 
 if (import.meta.main) {
-  const { serve } = await import("jsr:@d2verb/pera");
-  type ApiContext = import("jsr:@d2verb/pera").ApiContext;
+  const { serve } = await import("../src/mod.ts");
 
   await serve({
     port: 8080,
@@ -51,7 +50,7 @@ if (import.meta.main) {
     props: { initial: 4 },
     api: {
       "/students/:name": {
-        GET: (ctx: ApiContext) => new Response(`Hello, ${ctx.params.name}!`),
+        GET: (_, ctx) => new Response(`Hello, ${ctx.params.name}!`),
       },
     },
   });

@@ -113,16 +113,7 @@ export function serve(opts: PeraOptions) {
         return new Response("Invalid function signature", { status: 500 });
       }
 
-      const ctx: ApiContext = { params };
-      return await Promise.resolve(
-        // deno-lint-ignore no-explicit-any
-        fn.length == 2
-          ? (fn as any)(req, ctx) // deno-lint-ignore no-explicit-any
-          : fn.length == 1
-          ? (fn as any)(ctx)
-          // deno-lint-ignore no-explicit-any
-          : (fn as any)(),
-      );
+      return await fn(req, { params });
     }
 
     const html = `
