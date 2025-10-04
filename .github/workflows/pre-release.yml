@@ -1,0 +1,17 @@
+name: Create Pre-Release
+on:
+  workflow_dispatch:
+
+jobs:
+  pre-release:
+    run-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: read
+    steps:
+      - uses: release-drafter/release-drafter@v6
+        with:
+          publish: true
+          prerelease: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
