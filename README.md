@@ -1,5 +1,7 @@
 # pera
 
+[![JSR](https://jsr.io/badges/@d2verb/pera)](https://jsr.io/@d2verb/pera)
+
 Running frontend code without bundling - a super thin library to try out preact
 with just a single `.tsx` file. The name pera comes from the japanese word
 "ペライチ" (one-paper)
