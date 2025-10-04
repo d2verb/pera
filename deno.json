@@ -1,8 +1,11 @@
 {
   "name": "@d2verb/pera",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "license": "MIT",
-  "exports": "./src/mod.ts",
+  "exports": {
+    ".": "./src/mod.ts",
+    "./cli": "./src/cli.ts"
+  },
   "imports": {
     "@deno/emit": "jsr:@deno/emit@^0.46.0",
     "@std/assert": "jsr:@std/assert@1",
