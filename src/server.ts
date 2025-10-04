@@ -2,17 +2,46 @@ import { type ApiMap, type ApiMethod, findEndpoint } from "./api.ts";
 import { escapeHtml, filePathFromModuleUrl } from "./utils.ts";
 import { transpile } from "@deno/emit";
 
+/**
+ * The options for the Pera app.
+ */
 export type PeraOptions = {
+  /** The port to listen on. (Default: 8080) */
   port?: number;
+  /** The title of the app. This value will be used as the title of the HTML document. (Default: "Pera App") */
   title?: string;
+  /** The props to pass to the App component. (Default: {}) */
   // deno-lint-ignore no-explicit-any
   props?: Record<string, any>;
+  /** The URL of the module to import the App component from. */
   moduleUrl: string;
+  /** The ID of the root element to render the App component into. (Default: "root") */
   rootId?: string;
+  /** Whether to enable hot module replacement. (Default: true) */
   hmr?: boolean;
+  /** The API endpoints to expose to the client. (Default: {}) */
   api?: ApiMap;
 };
 
+/**
+ * Serve the Pera app. serve() implicitly treats a component named App as
+ * the root component. Therefore, you must define a component named App.
+ * 
+ * @example Basic Example
+ * ```ts
+ * // Make sure to import the serve function in the main module.
+ * if (import.meta.main) {
+ *   const { serve } = await import("jsr:@d2verb/pera");
+ * 
+ *   await serve({
+ *     port: 8080,
+ *     moduleUrl: import.meta.url,
+ *   });
+ * }
+ * ```
+ * 
+ * @param opts The options for the Pera app.
+ */
 export function serve(opts: PeraOptions) {
   const port = opts.port ?? 8080;
   const title = opts.title ?? "Pera App";
@@ -122,9 +151,8 @@ export function serve(opts: PeraOptions) {
         </head>
         <body>
           <div id="${rootId}"></div>
-          <script>window.__PERA_PROPS__ = ${
-      JSON.stringify(opts.props ?? {})
-    }</script>
+          <script>window.__PERA_PROPS__ = ${JSON.stringify(opts.props ?? {})
+      }</script>
           <script type="module" src="/_pera/client.js"></script>
         </body>
       </html>
