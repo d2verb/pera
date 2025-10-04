@@ -1,146 +1,77 @@
-import {
-  type ApiContext,
-  type ApiMap,
-  type ApiMethod,
-  findEndpoint,
-} from "./api.ts";
-import { escapeHtml, filePathFromModuleUrl } from "./utils.ts";
-import { transpile } from "@deno/emit";
+export * from "./server.ts";
 
-export type PeraOptions = {
-  port?: number;
-  title?: string;
-  // deno-lint-ignore no-explicit-any
-  props?: Record<string, any>;
-  moduleUrl: string;
-  rootId?: string;
-  hmr?: boolean;
-  api?: ApiMap;
-};
+if (import.meta.main) {
+  const args = Deno.args;
 
-export function serve(opts: PeraOptions) {
-  const port = opts.port ?? 8080;
-  const title = opts.title ?? "Pera App";
-  const rootId = opts.rootId ?? "root";
-  const appFile = filePathFromModuleUrl(opts.moduleUrl);
-  const hmr = opts.hmr ?? true;
-  const api = opts.api ?? {};
+  const help = () => {
+    console.log(`
+Pera - Run frontend code in a single file
 
-  const handler = async (req: Request) => {
-    const url = new URL(req.url);
+USAGE:
+      deno run -A jsr:@d2verb/pera new [FILE]
 
-    if (url.pathname === "/_pera/client.js") {
-      const code = `
-        import { h, render } from "https://esm.sh/preact@10";
-        import { App } from "/_pera/app.js";
-        const el = document.getElementById("${rootId}");
-        const props = window.__PERA_PROPS__ ?? {};
-        render(h(App, props), el);
-        if (${hmr}) {
-          const es = new EventSource("/_pera/hmr");
-          es.addEventListener("hot-reload", () => {
-            console.info("[HMR] reloading...");
-            location.reload();
-          });
-        }
-      `;
-      return new Response(code, {
-        headers: { "content-type": "application/javascript; charset=utf-8" },
-      });
-    }
+COMMANDS:
+      new [FILE]     Create a new Pera application file
+                     Default: app.tsx
 
-    if (url.pathname === "/_pera/app.js") {
-      try {
-        // Transpile the app file from tsx to js
-        const url = new URL("file://" + appFile);
-        const result = await transpile(url);
-        const code = result.get(url.href);
-        return new Response(code, {
-          headers: { "content-type": "application/javascript; charset=utf-8" },
-        });
-      } catch (e) {
-        return new Response(
-          `// read error: ${e instanceof Error ? e.message : "unknown error"}`,
-          {
-            status: 500,
-            headers: {
-              "content-type": "application/javascript; charset=utf-8",
-            },
-          },
-        );
-      }
-    }
+EXAMPLES:
+    # Create app.tsx with counter example
+    deno run -A jsr:@d2verb/pera new
 
-    if (url.pathname === "/_pera/hmr") {
-      const stream = new ReadableStream({
-        async start(controller) {
-          const enc = new TextEncoder();
-          controller.enqueue(enc.encode("retry: 2000\n\n"));
+    # Create my-app.tsx
+    deno run -A jsr:@d2verb/pera new my-app.tsx
 
-          for await (const ev of Deno.watchFs(appFile)) {
-            if (ev.kind === "modify") {
-              controller.enqueue(
-                enc.encode(`event: hot-reload\ndata: hot-reload\n\n`),
-              );
-            }
-          }
-        },
-      });
-      return new Response(stream, {
-        headers: {
-          "content-type": "text/event-stream",
-          "cache-control": "no-cache",
-          "connection": "keep-alive",
-        },
-      });
-    }
-
-    if (url.pathname.startsWith("/_pera/api/")) {
-      const path = url.pathname.slice(10);
-      const result = findEndpoint(path, api);
-      if (!result) {
-        return new Response("Endpoint not found", { status: 404 });
-      }
-
-      const { methodMap, params } = result;
-      const method = req.method as ApiMethod;
-      const fn = methodMap[method];
-      if (!fn) {
-        return new Response("Method not found", { status: 405 });
-      }
-
-      if (fn.length > 2) {
-        return new Response("Invalid function signature", { status: 500 });
-      }
-
-      return await fn(req, { params });
-    }
-
-    const html = `
-      <!doctype html>
-      <html lang="ja">
-        <head>
-          <meta charset="utf-8" />
-          <meta name="viewport" content="width=device-width, initial-scale=1" />
-          <title>${escapeHtml(title)}</title>
-          <script src="https://cdn.tailwindcss.com"></script>
-        </head>
-        <body>
-          <div id="${rootId}"></div>
-          <script>window.__PERA_PROPS__ = ${
-      JSON.stringify(opts.props ?? {})
-    }</script>
-          <script type="module" src="/_pera/client.js"></script>
-        </body>
-      </html>
-    `;
-
-    return new Response(html, {
-      headers: { "content-type": "text/html; charset=utf-8" },
-    });
+    # Run the created app
+    deno run -A app.tsx
+`);
+    Deno.exit(1);
   };
 
-  Deno.serve({ port }, handler);
+  const fileExists = async (path: string) => {
+    try {
+      await Deno.stat(path);
+      return true;
+    } catch {
+      return false;
+    }
+  };
+
+  if (args.length === 0 || args[0] !== "new" || args.length > 2) {
+    help();
+  }
+
+  const path = args.length === 2 ? args[1] : "app.tsx";
+  const content = `/** @jsxImportSource https://esm.sh/preact@10 */
+import { useState } from "https://esm.sh/preact@10/hooks";
+
+export function App() {
+  const [counter, setCounter] = useState(0);
+
+  return (
+    <div>
+      <h1>{counter}</h1>
+      <button type="button" onClick={() => setCounter(counter - 1)}>-</button>
+      <button type="button" onClick={() => setCounter(counter + 1)}>+</button>
+    </div>
+  );
 }
 
-export type { ApiContext };
+if (import.meta.main) {
+  const { serve } = await import("jsr:@d2verb/pera");
+
+  await serve({
+    port: 8080,
+    title: "Counter",
+    moduleUrl: import.meta.url,
+  });
+}`;
+
+  if (await fileExists(path)) {
+    console.error(`File ${path} already exists`);
+    Deno.exit(1);
+  }
+
+  await Deno.writeTextFile(path, content);
+  console.log(`Created ${path}. Run it with: deno run -A ${path}`);
+  Deno.exit(0);
+}
