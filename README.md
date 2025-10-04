@@ -16,6 +16,7 @@ with just a single `.tsx` file. The name pera comes from the japanese word
 ## Quick Start
 
 ```bash
+deno run -A jsr:@d2verb/pera new page.tsx
 deno run -A page.tsx
 ```
 

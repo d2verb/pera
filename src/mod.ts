@@ -8,18 +8,18 @@ if (import.meta.main) {
 Pera - Run frontend code in a single file
 
 USAGE:
-      deno run -A jsr:@d2verb/pera init [FILE]
+      deno run -A jsr:@d2verb/pera new [FILE]
 
 COMMANDS:
-      init [FILE]    Create a new Pera application file
+      new [FILE]     Create a new Pera application file
                      Default: app.tsx
 
 EXAMPLES:
     # Create app.tsx with counter example
-    deno run -A jsr:@d2verb/pera init
+    deno run -A jsr:@d2verb/pera new
 
     # Create my-app.tsx
-    deno run -A jsr:@d2verb/pera init my-app.tsx
+    deno run -A jsr:@d2verb/pera new my-app.tsx
 
     # Run the created app
     deno run -A app.tsx
@@ -36,7 +36,7 @@ EXAMPLES:
     }
   };
 
-  if (args.length === 0 || args[0] !== "init" || args.length > 2) {
+  if (args.length === 0 || args[0] !== "new" || args.length > 2) {
     help();
   }
 
