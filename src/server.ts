@@ -3,7 +3,11 @@ import { escapeHtml, filePathFromModuleUrl } from "./utils.ts";
 import type { PeraOptions } from "./types.ts";
 import { transpile } from "@deno/emit";
 
-
+/**
+ * The implementation of the serve() function.
+ *
+ * @param opts The options for the Pera app.
+ */
 export function serveImpl(opts: PeraOptions) {
   const port = opts.port ?? 8080;
   const title = opts.title ?? "Pera App";
@@ -113,8 +117,9 @@ export function serveImpl(opts: PeraOptions) {
         </head>
         <body>
           <div id="${rootId}"></div>
-          <script>window.__PERA_PROPS__ = ${JSON.stringify(opts.props ?? {})
-      }</script>
+          <script>window.__PERA_PROPS__ = ${
+      JSON.stringify(opts.props ?? {})
+    }</script>
           <script type="module" src="/_pera/client.js"></script>
         </body>
       </html>

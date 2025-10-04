@@ -16,7 +16,21 @@ import type { PeraOptions } from "./types.ts";
  * ```ts
  * await serve({
  *   port: 8080,
+ *   moduleUrl: import.meta.url, // This is required
+ * });
+ * ```
+ * 
+ * @example With API
+ * ```ts
+ * await serve({
+ *   port: 8080,
  *   moduleUrl: import.meta.url,
+ *   api: {
+ *     // The actual path is `/_pera/api/students/:name`
+ *     "/students/:name": {
+ *       GET: (_, ctx) => new Response(`Hello, ${ctx.params.name}!`),
+ *     },
+ *   },
  * });
  * ```
  *
@@ -29,5 +43,11 @@ export async function serve(opts: PeraOptions): Promise<void> {
   return serveImpl(opts);
 }
 
-export type { ApiContext, ApiFn, ApiMap, ApiMethod, ApiMethodMap } from "./api.ts";
+export type {
+  ApiContext,
+  ApiFn,
+  ApiMap,
+  ApiMethod,
+  ApiMethodMap,
+} from "./api.ts";
 export type { PeraOptions };
