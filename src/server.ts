@@ -26,20 +26,20 @@ export type PeraOptions = {
 /**
  * Serve the Pera app. serve() implicitly treats a component named App as
  * the root component. Therefore, you must define a component named App.
- * 
+ *
  * @example Basic Example
  * ```ts
  * // Make sure to import the serve function in the main module.
  * if (import.meta.main) {
  *   const { serve } = await import("jsr:@d2verb/pera");
- * 
+ *
  *   await serve({
  *     port: 8080,
  *     moduleUrl: import.meta.url,
  *   });
  * }
  * ```
- * 
+ *
  * @param opts The options for the Pera app.
  */
 export function serve(opts: PeraOptions) {
@@ -151,8 +151,9 @@ export function serve(opts: PeraOptions) {
         </head>
         <body>
           <div id="${rootId}"></div>
-          <script>window.__PERA_PROPS__ = ${JSON.stringify(opts.props ?? {})
-      }</script>
+          <script>window.__PERA_PROPS__ = ${
+      JSON.stringify(opts.props ?? {})
+    }</script>
           <script type="module" src="/_pera/client.js"></script>
         </body>
       </html>
