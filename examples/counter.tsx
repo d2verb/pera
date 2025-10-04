@@ -10,7 +10,7 @@ export function App({ initial = 0 }: Props) {
 
   useEffect(() => {
     const fetchMessage = async () => {
-      const response = await fetch(`/_pera/api/students/deno`);
+      const response = await fetch(`/_pera/api/users/deno`);
       const data = await response.text();
       setMessage(data);
     };
@@ -47,7 +47,7 @@ await serve({
   moduleUrl: import.meta.url,
   props: { initial: 4 },
   api: {
-    "/students/:name": {
+    "/users/:name": {
       GET: (_, ctx) => new Response(`Hello, ${ctx.params.name}!`),
     },
   },
