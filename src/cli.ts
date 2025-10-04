@@ -40,6 +40,7 @@ if (args.length === 0 || args[0] !== "new" || args.length > 2) {
 const path = args.length === 2 ? args[1] : "app.tsx";
 const content = `/** @jsxImportSource https://esm.sh/preact@10 */
 import { useState } from "https://esm.sh/preact@10/hooks";
+import { serve } from "https://esm.sh/jsr/@d2verb/pera";
 
 export function App() {
   const [counter, setCounter] = useState(0);
@@ -53,15 +54,12 @@ export function App() {
   );
 }
 
-if (import.meta.main) {
-  const { serve } = await import("jsr:@d2verb/pera");
-
-  await serve({
-    port: 8080,
-    title: "Counter",
-    moduleUrl: import.meta.url,
-  });
-}`;
+await serve({
+  port: 8080,
+  title: "Counter",
+  moduleUrl: import.meta.url,
+});
+`;
 
 if (await fileExists(path)) {
   console.error(`File ${path} already exists`);

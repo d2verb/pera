@@ -1,5 +1,6 @@
 /** @jsxImportSource https://esm.sh/preact@10 */
 import { useEffect, useState } from "https://esm.sh/preact@10/hooks";
+import { serve } from "https://esm.sh/jsr/@d2verb/pera";
 
 type Props = { initial?: number };
 
@@ -40,18 +41,14 @@ export function App({ initial = 0 }: Props) {
   );
 }
 
-if (import.meta.main) {
-  const { serve } = await import("jsr:@d2verb/pera");
-
-  await serve({
-    port: 8080,
-    title: "Counter Sample",
-    moduleUrl: import.meta.url,
-    props: { initial: 4 },
-    api: {
-      "/students/:name": {
-        GET: (_, ctx) => new Response(`Hello, ${ctx.params.name}!`),
-      },
+await serve({
+  port: 8080,
+  title: "Counter Sample",
+  moduleUrl: import.meta.url,
+  props: { initial: 4 },
+  api: {
+    "/students/:name": {
+      GET: (_, ctx) => new Response(`Hello, ${ctx.params.name}!`),
     },
-  });
-}
+  },
+});
