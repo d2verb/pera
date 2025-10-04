@@ -41,8 +41,8 @@ export function App({ initial = 0 }: Props) {
 }
 
 if (import.meta.main) {
-  const { serve } = await import("../src/mod.ts");
-  type ApiContext = import("../src/mod.ts").ApiContext;
+  const { serve } = await import("jsr:@d2verb/pera");
+  type ApiContext = import("jsr:@d2verb/pera").ApiContext;
 
   await serve({
     port: 8080,
