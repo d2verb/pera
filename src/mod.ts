@@ -1,3 +1,9 @@
+import {
+  type ApiContext,
+  type ApiMap,
+  type ApiMethod,
+  findEndpoint,
+} from "./api.ts";
 import { escapeHtml, filePathFromModuleUrl } from "./utils.ts";
 import { transpile } from "@deno/emit";
 
@@ -9,6 +15,7 @@ export type PeraOptions = {
   moduleUrl: string;
   rootId?: string;
   hmr?: boolean;
+  api?: ApiMap;
 };
 
 export function serve(opts: PeraOptions) {
@@ -17,6 +24,7 @@ export function serve(opts: PeraOptions) {
   const rootId = opts.rootId ?? "root";
   const appFile = filePathFromModuleUrl(opts.moduleUrl);
   const hmr = opts.hmr ?? true;
+  const api = opts.api ?? {};
 
   const handler = async (req: Request) => {
     const url = new URL(req.url);
@@ -87,6 +95,36 @@ export function serve(opts: PeraOptions) {
       });
     }
 
+    if (url.pathname.startsWith("/_pera/api/")) {
+      const path = url.pathname.slice(10);
+      const result = findEndpoint(path, api);
+      if (!result) {
+        return new Response("Endpoint not found", { status: 404 });
+      }
+
+      const { methodMap, params } = result;
+      const method = req.method as ApiMethod;
+      const fn = methodMap[method];
+      if (!fn) {
+        return new Response("Method not found", { status: 405 });
+      }
+
+      if (fn.length > 2) {
+        return new Response("Invalid function signature", { status: 500 });
+      }
+
+      const ctx: ApiContext = { params };
+      return await Promise.resolve(
+        // deno-lint-ignore no-explicit-any
+        fn.length == 2
+          ? (fn as any)(req, ctx) // deno-lint-ignore no-explicit-any
+          : fn.length == 1
+          ? (fn as any)(ctx)
+          // deno-lint-ignore no-explicit-any
+          : (fn as any)(),
+      );
+    }
+
     const html = `
       <!doctype html>
       <html lang="ja">
@@ -113,3 +151,5 @@ export function serve(opts: PeraOptions) {
 
   Deno.serve({ port }, handler);
 }
+
+export type { ApiContext };

@@ -1,13 +1,25 @@
 /** @jsxImportSource https://esm.sh/preact@10 */
-import { useState } from "https://esm.sh/preact@10/hooks";
+import { useEffect, useState } from "https://esm.sh/preact@10/hooks";
 
 type Props = { initial?: number };
 
 export function App({ initial = 0 }: Props) {
   const [counter, setCounter] = useState(initial);
+  const [message, setMessage] = useState<string>("");
+
+  useEffect(() => {
+    const fetchMessage = async () => {
+      const response = await fetch(`/_pera/api/students/deno`);
+      const data = await response.text();
+      setMessage(data);
+    };
+    fetchMessage();
+  }, [message]);
+
   return (
     <div className="flex flex-col items-center justify-center h-screen gap-4">
-      <h1 className="text-4xl font-bold">{counter}</h1>
+      <h1 className="text-4xl font-bold">Message From API: {message}</h1>
+      <h1 className="text-4xl font-bold">Counter: {counter}</h1>
       <div className="flex gap-4">
         <button
           type="button"
@@ -29,10 +41,18 @@ export function App({ initial = 0 }: Props) {
 }
 
 if (import.meta.main) {
-  const { serve } = await import("jsr:@d2verb/pera");
+  const { serve } = await import("../src/mod.ts");
+  type ApiContext = import("../src/mod.ts").ApiContext;
+
   await serve({
     port: 8080,
     title: "Counter Sample",
     moduleUrl: import.meta.url,
+    props: { initial: 4 },
+    api: {
+      "/students/:name": {
+        GET: (ctx: ApiContext) => new Response(`Hello, ${ctx.params.name}!`),
+      },
+    },
   });
 }
