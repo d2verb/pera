@@ -23,7 +23,7 @@ import type { PeraOptions } from "./types.ts";
  * @param opts The options for the Pera app.
  */
 export async function serve(opts: PeraOptions): Promise<void> {
-  if (!import.meta.main) return;
+  if (typeof Deno === "undefined") return;
 
   const { serveImpl } = await import("./server.ts");
   return serveImpl(opts);
