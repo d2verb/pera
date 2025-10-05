@@ -10,6 +10,7 @@
     "@deno/emit": "jsr:@deno/emit@^0.46.0",
     "@std/assert": "jsr:@std/assert@1",
     "@std/async": "jsr:@std/async@^1.0.14",
+    "@std/path": "jsr:@std/path@^1.1.2",
     "preact": "npm:preact@^10.27.2"
   }
 }
