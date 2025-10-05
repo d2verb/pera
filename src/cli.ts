@@ -39,6 +39,7 @@ if (args.length === 0 || args[0] !== "new" || args.length > 2) {
 
 const path = args.length === 2 ? args[1] : "app.tsx";
 const content = `/** @jsxImportSource https://esm.sh/preact@10 */
+// deno-lint-ignore-file no-import-prefix
 import { useState } from "https://esm.sh/preact@10/hooks";
 import { serve } from "https://esm.sh/jsr/@d2verb/pera";
 
