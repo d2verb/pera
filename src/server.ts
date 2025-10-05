@@ -130,5 +130,7 @@ export function serveImpl(opts: PeraOptions) {
     });
   };
 
-  Deno.serve({ port }, handler);
+  const server = Deno.serve({ port, signal: opts.signal }, handler);
+
+  return server.finished;
 }

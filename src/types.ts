@@ -19,4 +19,6 @@ export type PeraOptions = {
   hmr?: boolean;
   /** The API endpoints to expose to the client. (Default: {}) */
   api?: ApiMap;
+  /** The signal to abort the server. (Default: undefined) */
+  signal?: AbortSignal;
 };

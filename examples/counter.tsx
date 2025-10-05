@@ -1,4 +1,5 @@
 /** @jsxImportSource https://esm.sh/preact@10 */
+// deno-lint-ignore-file no-import-prefix
 import { useEffect, useState } from "https://esm.sh/preact@10/hooks";
 import { serve } from "https://esm.sh/jsr/@d2verb/pera";
 
