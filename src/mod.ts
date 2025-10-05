@@ -11,7 +11,7 @@ import type { PeraOptions } from "./types.ts";
  *   moduleUrl: import.meta.url, // This is required
  * });
  * ```
- * 
+ *
  * @example With API
  * ```ts
  * await serve({
