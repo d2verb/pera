@@ -1,7 +1,8 @@
 import { type ApiMethod, findEndpoint } from "./api.ts";
 import { escapeHtml, filePathFromModuleUrl } from "./utils.ts";
 import type { PeraOptions } from "./types.ts";
-import { transpile } from "@deno/emit";
+import { bundle } from "@deno/emit";
+import { dirname } from "@std/path";
 
 /**
  * The implementation of the serve() function.
@@ -19,35 +20,31 @@ export function serveImpl(opts: PeraOptions) {
   const handler = async (req: Request) => {
     const url = new URL(req.url);
 
-    if (url.pathname === "/_pera/client.js") {
-      const code = `
-        import { h, render } from "https://esm.sh/preact@10";
-        import { App } from "/_pera/app.js";
-        const el = document.getElementById("${rootId}");
-        const props = window.__PERA_PROPS__ ?? {};
-        render(h(App, props), el);
-        if (${hmr}) {
-          const es = new EventSource("/_pera/hmr");
-          es.addEventListener("hot-reload", () => {
-            console.info("[HMR] reloading...");
-            location.reload();
-          });
-        }
-      `;
-      return new Response(code, {
-        headers: { "content-type": "application/javascript; charset=utf-8" },
-      });
-    }
-
     if (url.pathname === "/_pera/app.js") {
       try {
-        // Transpile the app file from tsx to js
-        const url = new URL("file://" + appFile);
-        const result = await transpile(url);
-        const code = result.get(url.href);
-        return new Response(code, {
-          headers: { "content-type": "application/javascript; charset=utf-8" },
+        const origCode = await Deno.readTextFile(appFile);
+        const autoExports =
+          '\n\nexport { h, render } from "https://esm.sh/preact@10";\n';
+        const codeToBundle = origCode + autoExports;
+
+        const tempFile = await Deno.makeTempFile({
+          dir: dirname(appFile),
+          prefix: ".pera-temp-app-",
+          suffix: ".tsx",
         });
+
+        try {
+          await Deno.writeTextFile(tempFile, codeToBundle);
+          const url = new URL("file://" + tempFile);
+          const result = await bundle(url);
+          return new Response(result.code, {
+            headers: {
+              "content-type": "application/javascript; charset=utf-8",
+            },
+          });
+        } finally {
+          await Deno.remove(tempFile);
+        }
       } catch (e) {
         return new Response(
           `// read error: ${e instanceof Error ? e.message : "unknown error"}`,
@@ -120,7 +117,19 @@ export function serveImpl(opts: PeraOptions) {
           <script>window.__PERA_PROPS__ = ${
       JSON.stringify(opts.props ?? {})
     }</script>
-          <script type="module" src="/_pera/client.js"></script>
+          <script type="module">
+            import { App, h, render } from "/_pera/app.js";
+            const el = document.getElementById("${rootId}");
+            const props = window.__PERA_PROPS__ ?? {};
+            render(h(App, props), el);
+            if (${hmr}) {
+              const es = new EventSource("/_pera/hmr");
+              es.addEventListener("hot-reload", () => {
+                console.info("[HMR] reloading...");
+                location.reload();
+              });
+            }
+          </script>
         </body>
       </html>
     `;
