@@ -17,7 +17,7 @@ Deno.test("cli new generates tsx file", async () => {
   assertMatch(content, /^\/\*\* @jsxImportSource/);
   assertMatch(
     content,
-    /import { serve } from "https:\/\/esm\.sh\/jsr\/@d2verb\/pera"/,
+    /import { serve } from "https:\/\/esm\.sh\/jsr\/@d2verb\/pera/,
   );
   assertMatch(content, /await serve/);
 });
