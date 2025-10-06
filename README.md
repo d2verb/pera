@@ -91,7 +91,7 @@ Open your browser at http://localhost:8080 and see your Preact app running.
 ## Limitations
 
 - Currently designed for simple, single-page apps
-- Not optimized for production use (no SSR, no routing, etc.)
+- Not optimized for production use (no routing, etc.)
 - Requires Deno
 
 ## License
