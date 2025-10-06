@@ -28,7 +28,10 @@ import type { PeraApp, PeraOptions } from "./types.ts";
  *
  * @param opts The options for the Pera app.
  */
-export async function serve(App: PeraApp, opts: PeraOptions): Promise<void> {
+export async function serve<P extends Record<string, unknown>>(
+  App: PeraApp<P>,
+  opts: PeraOptions<P>,
+): Promise<void> {
   if (typeof Deno === "undefined") return;
 
   const { serveImpl } = await import("./server.ts");
