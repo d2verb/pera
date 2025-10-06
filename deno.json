@@ -1,11 +1,9 @@
 {
   "name": "@d2verb/pera",
-  "version": "0.0.11",
+  "version": "0.0.12",
   "license": "MIT",
   "exports": {
     ".": "./src/mod.ts",
-    "./preact": "./src/preact.ts",
-    "./preact/jsx-runtime": "./src/preact.ts",
     "./cli": "./src/cli.ts"
   },
   "compilerOptions": {
