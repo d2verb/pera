@@ -38,10 +38,10 @@ if (args.length === 0 || args[0] !== "new" || args.length > 2) {
 }
 
 const path = args.length === 2 ? args[1] : "app.tsx";
-const content = `/** @jsxImportSource https://esm.sh/jsr/@d2verb/pera/preact */
+const content = `/** @jsxImportSource https://esm.sh/preact@10.27.2 */
 // deno-lint-ignore-file no-import-prefix
-import { useState } from "https://esm.sh/jsr/@d2verb/pera/preact";
-import { serve } from "https://esm.sh/jsr/@d2verb/pera";
+import { useEffect, useState } from "https://esm.sh/preact@10.27.2/hooks";
+import { serve } from "https://esm.sh/jsr/@d2verb/pera?deps=preact@10.27.2,preact-render-to-string@6.6.2";
 
 export function App() {
   const [counter, setCounter] = useState(0);
