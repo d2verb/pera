@@ -1,3 +1,4 @@
+import type { JSX } from "preact";
 import type { ApiMap } from "./api.ts";
 
 /**
@@ -22,3 +23,6 @@ export type PeraOptions = {
   /** The signal to abort the server. (Default: undefined) */
   signal?: AbortSignal;
 };
+
+// deno-lint-ignore no-explicit-any
+export type PeraApp = (props: Record<string, any>) => JSX.Element;

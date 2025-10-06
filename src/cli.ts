@@ -55,7 +55,7 @@ export function App() {
   );
 }
 
-await serve({
+await serve(App, {
   port: 8080,
   title: "Counter",
   moduleUrl: import.meta.url,

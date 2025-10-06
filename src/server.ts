@@ -1,15 +1,17 @@
 import { type ApiMethod, findEndpoint } from "./api.ts";
 import { escapeHtml, filePathFromModuleUrl } from "./utils.ts";
-import type { PeraOptions } from "./types.ts";
+import type { PeraApp, PeraOptions } from "./types.ts";
 import { bundle } from "@deno/emit";
 import { dirname } from "@std/path";
+import { renderToString } from "preact-render-to-string";
+import { h } from "preact";
 
 /**
  * The implementation of the serve() function.
  *
  * @param opts The options for the Pera app.
  */
-export function serveImpl(opts: PeraOptions) {
+export function serveImpl(App: PeraApp, opts: PeraOptions) {
   const port = opts.port ?? 8080;
   const title = opts.title ?? "Pera App";
   const rootId = opts.rootId ?? "root";
@@ -24,7 +26,7 @@ export function serveImpl(opts: PeraOptions) {
       try {
         const origCode = await Deno.readTextFile(appFile);
         const autoExports =
-          '\n\nexport { h, render } from "https://esm.sh/preact@10";\n';
+          '\n\nexport { h, render } from "https://esm.sh/preact@10.27.2";\n';
         const codeToBundle = origCode + autoExports;
 
         const tempFile = await Deno.makeTempFile({
@@ -103,6 +105,7 @@ export function serveImpl(opts: PeraOptions) {
       return await fn(req, { params });
     }
 
+    const ssr = await renderToString(h(App, opts.props ?? {}));
     const html = `
       <!doctype html>
       <html lang="ja">
@@ -113,7 +116,7 @@ export function serveImpl(opts: PeraOptions) {
           <script src="https://cdn.tailwindcss.com"></script>
         </head>
         <body>
-          <div id="${rootId}"></div>
+          <div id="${rootId}">${ssr}</div>
           <script>window.__PERA_PROPS__ = ${
       JSON.stringify(opts.props ?? {})
     }</script>
