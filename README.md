@@ -67,7 +67,7 @@ export function App({ initial = 0 }: Props) {
   );
 }
 
-await serve({
+await serve(App, {
   port: 8080,
   title: "Counter Sample",
   moduleUrl: import.meta.url,

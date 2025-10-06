@@ -1,4 +1,4 @@
-import type { PeraOptions } from "./types.ts";
+import type { PeraApp, PeraOptions } from "./types.ts";
 
 /**
  * Serve the Pera app. serve() implicitly treats a component named App as
@@ -6,7 +6,7 @@ import type { PeraOptions } from "./types.ts";
  *
  * @example Basic Example
  * ```ts
- * await serve({
+ * await serve(App, {
  *   port: 8080,
  *   moduleUrl: import.meta.url, // This is required
  * });
@@ -14,7 +14,7 @@ import type { PeraOptions } from "./types.ts";
  *
  * @example With API
  * ```ts
- * await serve({
+ * await serve(App, {
  *   port: 8080,
  *   moduleUrl: import.meta.url,
  *   api: {
@@ -28,11 +28,11 @@ import type { PeraOptions } from "./types.ts";
  *
  * @param opts The options for the Pera app.
  */
-export async function serve(opts: PeraOptions): Promise<void> {
+export async function serve(App: PeraApp, opts: PeraOptions): Promise<void> {
   if (typeof Deno === "undefined") return;
 
   const { serveImpl } = await import("./server.ts");
-  return serveImpl(opts);
+  return serveImpl(App, opts);
 }
 
 export type {

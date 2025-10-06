@@ -1,6 +1,6 @@
-/** @jsxImportSource https://esm.sh/preact@10 */
+/** @jsxImportSource https://esm.sh/preact@10.27.2 */
 // deno-lint-ignore-file no-import-prefix
-import { useEffect, useState } from "https://esm.sh/preact@10/hooks";
+import { useEffect, useState } from "https://esm.sh/preact@10.27.2/hooks";
 import { serve } from "https://esm.sh/jsr/@d2verb/pera";
 
 type Props = { initial?: number };
@@ -42,7 +42,7 @@ export function App({ initial = 0 }: Props) {
   );
 }
 
-await serve({
+await serve(App, {
   port: 8080,
   title: "Counter Sample",
   moduleUrl: import.meta.url,
