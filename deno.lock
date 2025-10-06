@@ -15,7 +15,9 @@
     "jsr:@std/io@0.223": "0.223.0",
     "jsr:@std/path@*": "0.223.0",
     "jsr:@std/path@0.223": "0.223.0",
-    "jsr:@std/path@^1.1.2": "1.1.2"
+    "jsr:@std/path@^1.1.2": "1.1.2",
+    "npm:preact-render-to-string@6.6.2": "6.6.2_preact@10.27.2",
+    "npm:preact@10.27.2": "10.27.2"
   },
   "jsr": {
     "@deno/cache-dir@0.13.2": {
@@ -80,6 +82,17 @@
       "dependencies": [
         "jsr:@std/internal"
       ]
+    }
+  },
+  "npm": {
+    "preact-render-to-string@6.6.2_preact@10.27.2": {
+      "integrity": "sha512-VJ++Pkzv6+ZOmeN/9Qvx0mRdXqnei1Lo3uu9bGvYHhoMI1VUkDT44hcpGbiokl/kuuYTayYa3yvmYTLZMplfMA==",
+      "dependencies": [
+        "preact"
+      ]
+    },
+    "preact@10.27.2": {
+      "integrity": "sha512-5SYSgFKSyhCbk6SrXyMpqjb5+MQBgfvEKE/OC+PujcY34sOpqtr+0AZQtPYx5IA6VxynQ7rUPCtKzyovpj9Bpg=="
     }
   },
   "redirects": {
@@ -243,7 +256,9 @@
       "jsr:@deno/emit@0.46",
       "jsr:@std/assert@1",
       "jsr:@std/async@^1.0.14",
-      "jsr:@std/path@^1.1.2"
+      "jsr:@std/path@^1.1.2",
+      "npm:preact-render-to-string@6.6.2",
+      "npm:preact@10.27.2"
     ]
   }
 }

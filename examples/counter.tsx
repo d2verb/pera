@@ -1,6 +1,6 @@
-/** @jsxImportSource https://esm.sh/preact@10.27.2 */
+/** @jsxImportSource https://esm.sh/jsr/@d2verb/pera/preact */
 // deno-lint-ignore-file no-import-prefix
-import { useEffect, useState } from "https://esm.sh/preact@10.27.2/hooks";
+import { useEffect, useState } from "https://esm.sh/jsr/@d2verb/pera/preact";
 import { serve } from "https://esm.sh/jsr/@d2verb/pera";
 
 type Props = { initial?: number };
