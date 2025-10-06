@@ -24,8 +24,8 @@ deno run -A page.tsx
 ### Example
 
 ```tsx
-/** @jsxImportSource https://esm.sh/preact@10 */
-import { useEffect, useState } from "https://esm.sh/preact@10/hooks";
+/** @jsxImportSource https://esm.sh/jsr/@d2verb/pera/preact */
+import { useEffect, useState } from "https://esm.sh/jsr/@d2verb/pera/preact";
 import { serve } from "https://esm.sh/jsr/@d2verb/pera";
 
 type Props = { initial?: number };

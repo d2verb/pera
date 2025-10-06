@@ -4,6 +4,8 @@
   "license": "MIT",
   "exports": {
     ".": "./src/mod.ts",
+    "./preact": "./src/preact.ts",
+    "./preact/jsx-runtime": "./src/preact.ts",
     "./cli": "./src/cli.ts"
   },
   "compilerOptions": {
@@ -15,9 +17,9 @@
     "@std/assert": "jsr:@std/assert@1",
     "@std/async": "jsr:@std/async@^1.0.14",
     "@std/path": "jsr:@std/path@^1.1.2",
-    "preact": "https://esm.sh/preact@10.27.2",
-    "preact/jsx-runtime": "https://esm.sh/preact@10.27.2/jsx-runtime",
-    "preact/hooks": "https://esm.sh/preact@10.27.2/hooks",
-    "preact-render-to-string": "https://esm.sh/preact-render-to-string@6.6.2?deps=preact@10.27.2"
+    "preact": "npm:preact@10.27.2",
+    "preact/jsx-runtime": "npm:preact@10.27.2/jsx-runtime",
+    "preact/hooks": "npm:preact@10.27.2/hooks",
+    "preact-render-to-string": "npm:preact-render-to-string@6.6.2"
   }
 }
