@@ -1,22 +1,19 @@
 import { assertEquals, assertMatch } from "@std/assert";
 import { delay } from "@std/async";
 import { serve } from "../src/mod.ts";
-
-const App = () => {
-  return <div>Hello, World!</div>;
-};
+import { App } from "./sample-app.tsx";
 
 const port: number = 9090;
 let finished: Promise<void>;
 let controller: AbortController;
 
 Deno.test.beforeEach(async () => {
+  const sampleAppFile = new URL("sample-app.tsx", import.meta.url);
   controller = new AbortController();
   finished = serve(App, {
     port,
     title: "Test Server",
-    moduleUrl: import.meta.url,
-    props: { initial: 7 },
+    moduleUrl: sampleAppFile.href,
     api: (app) => {
       app.get(
         "/users/:name",
@@ -73,5 +70,11 @@ Deno.test("serve() responds to GET /_pera/hmr", async () => {
 });
 
 Deno.test("serve() responds to GET /_pera/app.js", async () => {
-  // TODO(d2verb): Implement this test
+  const resAppJs = await fetch(`http://localhost:${port}/_pera/app.js`);
+  assertEquals(resAppJs.status, 200);
+  assertEquals(
+    resAppJs.headers.get("content-type"),
+    "application/javascript; charset=utf-8",
+  );
+  await resAppJs.text();
 });
