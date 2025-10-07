@@ -28,10 +28,7 @@ deno run -A page.tsx
 /** @jsxImportSource https://esm.sh/preact@10.27.2 */
 // deno-lint-ignore-file no-import-prefix
 import { useEffect, useState } from "https://esm.sh/preact@10.27.2/hooks";
-import {
-  defineApi,
-  serve,
-} from "https://esm.sh/jsr/@d2verb/pera?deps=preact@10.27.2";
+import { serve } from "https://esm.sh/jsr/@d2verb/pera?deps=preact@10.27.2";
 
 type Props = { initial?: number };
 
@@ -77,11 +74,12 @@ await serve(App, {
   title: "Counter Sample",
   moduleUrl: import.meta.url,
   props: { initial: 4 },
-  api: defineApi({
-    "/users/:name": {
-      GET: (_, ctx) => new Response(`Hello, ${ctx.params.name}!`),
-    },
-  }),
+  api: (app) => {
+    app.get(
+      "/users/:name",
+      (c) => new Response(`Hello, ${c.req.param("name")}!`),
+    );
+  },
 });
 ```
 

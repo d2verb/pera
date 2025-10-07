@@ -13,17 +13,17 @@ import type { PeraApp, PeraOptions } from "./types.ts";
  * ```
  *
  * @example With API
- * You should use defineApi() to define your API endpoints — it helps TypeScript infer the types of path parameters automatically.
+ * `app` is a Hono app instance. You can use it to define your API endpoints.
  * ```ts
  * await serve(App, {
  *   port: 8080,
  *   moduleUrl: import.meta.url,
- *   api: defineApi({
+ *   api: (app) => {
  *     // The actual path is `/_pera/api/students/:name`
- *     "/students/:name": {
- *       GET: (_, ctx) => new Response(`Hello, ${ctx.params.name}!`),
- *     },
- *   }),
+ *     app.get("/students/:name", (c) =>
+ *       new Response(`Hello, ${c.req.param("name")}!`),
+ *     );
+ *   },
  * });
  * ```
  *
