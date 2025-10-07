@@ -4,6 +4,7 @@
   "license": "MIT",
   "tasks": {
     "test": "deno test -A --coverage=coverage",
+    "check": "deno check src/ tests/ examples/",
     "configure-lefthook": "lefthook install"
   },
   "nodeModulesDir": "auto",

@@ -6,6 +6,6 @@ pre-commit:
     fmt:
       run: deno fmt --check
     tc:
-      run: deno check
+      run: deno run check
     test:
       run: deno test -A
