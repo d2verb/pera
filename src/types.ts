@@ -19,7 +19,7 @@ export type PeraOptions<
   rootId?: string;
   /** Whether to enable hot module replacement. (Default: true) */
   hmr?: boolean;
-  /** The API endpoints to expose to the client. (Default: {}) */
+  /** The function to register the API endpoints. (Default: undefined) */
   api?: (app: Hono) => void | Promise<void>;
   /** The signal to abort the server. (Default: undefined) */
   signal?: AbortSignal;
