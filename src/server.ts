@@ -9,9 +9,12 @@ import { h } from "preact";
 /**
  * The implementation of the serve() function.
  *
+ * @param App The root component of the Pera app.
  * @param opts The options for the Pera app.
  */
-export function serveImpl<P extends Record<string, unknown>>(
+export function serveImpl<
+  P extends Record<string, unknown> = Record<string, unknown>,
+>(
   App: PeraApp<P>,
   opts: PeraOptions<P>,
 ) {

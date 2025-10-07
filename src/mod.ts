@@ -26,9 +26,12 @@ import type { PeraApp, PeraOptions } from "./types.ts";
  * });
  * ```
  *
+ * @param App The root component of the Pera app.
  * @param opts The options for the Pera app.
  */
-export async function serve<P extends Record<string, unknown>>(
+export async function serve<
+  P extends Record<string, unknown> = Record<string, unknown>,
+>(
   App: PeraApp<P>,
   opts: PeraOptions<P>,
 ): Promise<void> {
@@ -44,5 +47,7 @@ export type {
   ApiMap,
   ApiMethod,
   ApiMethodMap,
+  PathParams,
 } from "./api.ts";
+export { defineApi } from "./api.ts";
 export type { PeraOptions };

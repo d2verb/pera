@@ -1,6 +1,6 @@
 import { assertEquals, assertMatch } from "@std/assert";
 import { delay } from "@std/async";
-import { serve } from "../src/mod.ts";
+import { defineApi, serve } from "../src/mod.ts";
 
 const App = () => {
   return <div>Hello, World!</div>;
@@ -15,11 +15,11 @@ Deno.test("serve() starts and responds", async () => {
     title: "Test Server",
     moduleUrl: import.meta.url,
     props: { initial: 7 },
-    api: {
+    api: defineApi({
       "/users/:name": {
         GET: (_, ctx) => new Response(`Hello, ${ctx.params.name}!`),
       },
-    },
+    }),
     signal: controller.signal,
   });
 

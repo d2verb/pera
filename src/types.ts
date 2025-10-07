@@ -4,7 +4,9 @@ import type { ApiMap } from "./api.ts";
 /**
  * The options for the Pera app.
  */
-export type PeraOptions<P extends Record<string, unknown>> = {
+export type PeraOptions<
+  P extends Record<string, unknown> = Record<string, unknown>,
+> = {
   /** The port to listen on. (Default: 8080) */
   port?: number;
   /** The title of the app. This value will be used as the title of the HTML document. (Default: "Pera App") */
@@ -23,6 +25,8 @@ export type PeraOptions<P extends Record<string, unknown>> = {
   signal?: AbortSignal;
 };
 
-export type PeraApp<P extends Record<string, unknown>> = (
+export type PeraApp<
+  P extends Record<string, unknown> = Record<string, unknown>,
+> = (
   props: P,
 ) => JSX.Element;
