@@ -1,0 +1,11 @@
+pre-commit:
+  parallel: true
+  commands:
+    lint:
+      run: deno lint
+    fmt:
+      run: deno fmt --check
+    tc:
+      run: deno check
+    test:
+      run: deno test -A

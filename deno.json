@@ -2,6 +2,10 @@
   "name": "@d2verb/pera",
   "version": "0.0.13",
   "license": "MIT",
+  "tasks": {
+    "configure-lefthook": "lefthook install"
+  },
+  "nodeModulesDir": "auto",
   "exports": {
     ".": "./src/mod.ts",
     "./cli": "./src/cli.ts"
@@ -16,6 +20,7 @@
     "@std/async": "jsr:@std/async@^1.0.14",
     "@std/path": "jsr:@std/path@^1.1.2",
     "@std/testing": "jsr:@std/testing@^1.0.15",
+    "lefthook": "npm:lefthook@^1.13.6",
     "preact": "npm:preact@10.27.2",
     "preact/jsx-runtime": "npm:preact@10.27.2/jsx-runtime",
     "preact/hooks": "npm:preact@10.27.2/hooks",
