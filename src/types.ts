@@ -23,6 +23,8 @@ export type PeraOptions<
   api?: (app: Hono) => void | Promise<void>;
   /** The signal to abort the server. (Default: undefined) */
   signal?: AbortSignal;
+  /** Whether to enable logging. (Default: false) */
+  logging?: boolean;
 };
 
 export type PeraApp<
