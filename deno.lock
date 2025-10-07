@@ -7,15 +7,20 @@
     "jsr:@deno/graph@~0.73.1": "0.73.1",
     "jsr:@std/assert@0.223": "0.223.0",
     "jsr:@std/assert@1": "1.0.14",
+    "jsr:@std/assert@^1.0.13": "1.0.14",
     "jsr:@std/async@^1.0.14": "1.0.14",
     "jsr:@std/bytes@0.223": "0.223.0",
+    "jsr:@std/data-structures@^1.0.9": "1.0.9",
     "jsr:@std/fmt@0.223": "0.223.0",
     "jsr:@std/fs@0.223": "0.223.0",
+    "jsr:@std/fs@^1.0.19": "1.0.19",
     "jsr:@std/internal@^1.0.10": "1.0.10",
     "jsr:@std/io@0.223": "0.223.0",
     "jsr:@std/path@*": "0.223.0",
     "jsr:@std/path@0.223": "0.223.0",
+    "jsr:@std/path@^1.1.1": "1.1.2",
     "jsr:@std/path@^1.1.2": "1.1.2",
+    "jsr:@std/testing@^1.0.15": "1.0.15",
     "npm:preact-render-to-string@6.6.2": "6.6.2_preact@10.27.2",
     "npm:preact@10.27.2": "10.27.2"
   },
@@ -25,7 +30,7 @@
       "dependencies": [
         "jsr:@deno/graph",
         "jsr:@std/fmt",
-        "jsr:@std/fs",
+        "jsr:@std/fs@0.223",
         "jsr:@std/io",
         "jsr:@std/path@0.223"
       ]
@@ -55,11 +60,20 @@
     "@std/bytes@0.223.0": {
       "integrity": "84b75052cd8680942c397c2631318772b295019098f40aac5c36cead4cba51a8"
     },
+    "@std/data-structures@1.0.9": {
+      "integrity": "033d6e17e64bf1f84a614e647c1b015fa2576ae3312305821e1a4cb20674bb4d"
+    },
     "@std/fmt@0.223.0": {
       "integrity": "6deb37794127dfc7d7bded2586b9fc6f5d50e62a8134846608baf71ffc1a5208"
     },
     "@std/fs@0.223.0": {
       "integrity": "3b4b0550b2c524cbaaa5a9170c90e96cbb7354e837ad1bdaf15fc9df1ae9c31c"
+    },
+    "@std/fs@1.0.19": {
+      "integrity": "051968c2b1eae4d2ea9f79a08a3845740ef6af10356aff43d3e2ef11ed09fb06",
+      "dependencies": [
+        "jsr:@std/path@^1.1.1"
+      ]
     },
     "@std/internal@1.0.10": {
       "integrity": "e3be62ce42cab0e177c27698e5d9800122f67b766a0bea6ca4867886cbde8cf7"
@@ -81,6 +95,16 @@
       "integrity": "c0b13b97dfe06546d5e16bf3966b1cadf92e1cc83e56ba5476ad8b498d9e3038",
       "dependencies": [
         "jsr:@std/internal"
+      ]
+    },
+    "@std/testing@1.0.15": {
+      "integrity": "a490169f5ccb0f3ae9c94fbc69d2cd43603f2cffb41713a85f99bbb0e3087cbc",
+      "dependencies": [
+        "jsr:@std/assert@^1.0.13",
+        "jsr:@std/data-structures",
+        "jsr:@std/fs@^1.0.19",
+        "jsr:@std/internal",
+        "jsr:@std/path@^1.1.1"
       ]
     }
   },
@@ -257,6 +281,7 @@
       "jsr:@std/assert@1",
       "jsr:@std/async@^1.0.14",
       "jsr:@std/path@^1.1.2",
+      "jsr:@std/testing@^1.0.15",
       "npm:preact-render-to-string@6.6.2",
       "npm:preact@10.27.2"
     ]

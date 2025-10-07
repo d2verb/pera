@@ -31,51 +31,64 @@ type Prettify<T> =
  * @example
  * ```ts
  * PathParams<"/users/:id/posts/:postId"> = { id: string; postId: string }
+ * PathParams<"/users"> = Record<string, never>
+ * PathParams<"/users/:name/:name"> = never
+ * PathParams<""> = never
  * ```
  */
-export type PathParams<Path extends string> = Prettify<
-  Path extends `${infer _Start}:${infer Param}/${infer Rest}`
-    ? { [K in Param]: string } & PathParams<`/${Rest}`>
-    : Path extends `${infer _Start}:${infer Param}` ? { [K in Param]: string }
+export type PathParams<Path extends string, Seen extends string = never> =
+  Prettify<
+    Path extends "" ? never
+    : Path extends `${infer _Start}:${infer Param}/${infer Rest}`
+    ? Param extends "" ? never
+    : Param extends Seen ? never
+    : { [K in Param]: string } & PathParams<`/${Rest}`, Param | Seen>
+    : Path extends `${infer _Start}:${infer Param}` ? Param extends "" ? never
+    : Param extends Seen ? never
+    : { [K in Param]: string }
     : Record<string, never>
->;
+  >;
 
 /**
  * The context for the API function.
  */
 export type ApiContext<
-  T extends Record<string, string> = Record<string, string>,
+  Params extends Record<string, string>,
 > = {
   /** The path parameters parsed from the URL. */
-  params: T;
+  params: Params;
 };
 
 /**
  * The function signature for the API function.
  */
-export type ApiFn<T extends Record<string, string> = Record<string, string>> = (
+export type ApiFn<
+  Params extends Record<string, string>,
+> = (
   req: Request,
-  ctx: ApiContext<T>,
+  ctx: ApiContext<Params>,
 ) => Response | Promise<Response>;
 
 /**
  * The map of the API methods to the API functions.
  */
 export type ApiMethodMap<
-  T extends Record<string, string> = Record<string, string>,
-> = Partial<Record<ApiMethod, ApiFn<T>>>;
+  Params extends Record<string, string>,
+> = Partial<Record<ApiMethod, ApiFn<Params>>>;
 
 /**
  * The map of the API endpoints to the API methods.
  */
 export type ApiMap<
-  T extends Record<string, unknown> = Record<string, unknown>,
+  T extends Record<string, unknown>,
 > = {
-  [K in keyof T & string]: ApiMethodMap<PathParams<K>>;
-};
+    [K in keyof T & string]: ApiMethodMap<PathParams<K>>;
+  };
 
 /**
  * Type inference for the API map.
+ * 
+ * TODO(d2verb): I want to trigger a type error if the path is invalid, but I don't know how to do it.
  */
 export function defineApi<T extends Record<string, unknown>>(
   routes: ApiMap<T>,
