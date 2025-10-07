@@ -42,17 +42,7 @@ export async function serveImpl<
       try {
         await Deno.writeTextFile(tempFile, codeToBundle);
         const url = new URL("file://" + tempFile);
-        const result = await bundle(url, {
-          importMap: {
-            imports: {
-              "preact": "https://esm.sh/preact@10.27.2",
-              "preact/jsx-runtime": "https://esm.sh/preact@10.27.2/jsx-runtime",
-              "preact/hooks": "https://esm.sh/preact@10.27.2/hooks",
-              "preact-render-to-string":
-                "https://esm.sh/preact-render-to-string@6.6.2",
-            },
-          },
-        });
+        const result = await bundle(url);
         return new Response(result.code, {
           headers: {
             "content-type": "application/javascript; charset=utf-8",
