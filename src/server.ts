@@ -9,9 +9,15 @@ import { h } from "preact";
 /**
  * The implementation of the serve() function.
  *
+ * @param App The root component of the Pera app.
  * @param opts The options for the Pera app.
  */
-export function serveImpl(App: PeraApp, opts: PeraOptions) {
+export function serveImpl<
+  P extends Record<string, unknown> = Record<string, unknown>,
+>(
+  App: PeraApp<P>,
+  opts: PeraOptions<P>,
+) {
   const port = opts.port ?? 8080;
   const title = opts.title ?? "Pera App";
   const rootId = opts.rootId ?? "root";
@@ -105,7 +111,8 @@ export function serveImpl(App: PeraApp, opts: PeraOptions) {
       return await fn(req, { params });
     }
 
-    const ssr = await renderToString(h(App, opts.props ?? {}));
+    const ssr = await renderToString(h(App, opts.props ?? null));
+    const propsStr = JSON.stringify(opts.props ?? {});
     const html = `
       <!doctype html>
       <html lang="ja">
@@ -117,9 +124,7 @@ export function serveImpl(App: PeraApp, opts: PeraOptions) {
         </head>
         <body>
           <div id="${rootId}">${ssr}</div>
-          <script>window.__PERA_PROPS__ = ${
-      JSON.stringify(opts.props ?? {})
-    }</script>
+          <script>window.__PERA_PROPS__ = ${propsStr}</script>
           <script type="module">
             import { App, h, render } from "/_pera/app.js";
             const el = document.getElementById("${rootId}");

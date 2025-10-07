@@ -1,7 +1,11 @@
 /** @jsxImportSource https://esm.sh/preact@10.27.2 */
 // deno-lint-ignore-file no-import-prefix
+// @ts-nocheck The old cached version of the library causes type errors sometimes.
 import { useEffect, useState } from "https://esm.sh/preact@10.27.2/hooks";
-import { serve } from "https://esm.sh/jsr/@d2verb/pera?deps=preact@10.27.2,preact-render-to-string@6.6.2";
+import {
+  defineApi,
+  serve,
+} from "https://esm.sh/jsr/@d2verb/pera?deps=preact@10.27.2,preact-render-to-string@6.6.2";
 
 type Props = { initial?: number };
 
@@ -47,9 +51,9 @@ await serve(App, {
   title: "Counter Sample",
   moduleUrl: import.meta.url,
   props: { initial: 4 },
-  api: {
+  api: defineApi({
     "/users/:name": {
       GET: (_, ctx) => new Response(`Hello, ${ctx.params.name}!`),
     },
-  },
+  }),
 });
