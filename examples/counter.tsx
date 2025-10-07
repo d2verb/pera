@@ -1,5 +1,6 @@
 /** @jsxImportSource https://esm.sh/preact@10.27.2 */
 // deno-lint-ignore-file no-import-prefix
+// @ts-nocheck The old cached version of the library causes type errors sometimes.
 import { useEffect, useState } from "https://esm.sh/preact@10.27.2/hooks";
 import {
   defineApi,

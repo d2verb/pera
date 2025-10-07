@@ -39,14 +39,14 @@ type Prettify<T> =
 export type PathParams<Path extends string, Seen extends string = never> =
   Prettify<
     Path extends "" ? never
-    : Path extends `${infer _Start}:${infer Param}/${infer Rest}`
-    ? Param extends "" ? never
-    : Param extends Seen ? never
-    : { [K in Param]: string } & PathParams<`/${Rest}`, Param | Seen>
-    : Path extends `${infer _Start}:${infer Param}` ? Param extends "" ? never
-    : Param extends Seen ? never
-    : { [K in Param]: string }
-    : Record<string, never>
+      : Path extends `${infer _Start}:${infer Param}/${infer Rest}`
+        ? Param extends "" ? never
+        : Param extends Seen ? never
+        : { [K in Param]: string } & PathParams<`/${Rest}`, Param | Seen>
+      : Path extends `${infer _Start}:${infer Param}` ? Param extends "" ? never
+        : Param extends Seen ? never
+        : { [K in Param]: string }
+      : Record<string, never>
   >;
 
 /**
@@ -80,14 +80,14 @@ export type ApiMethodMap<
  * The map of the API endpoints to the API methods.
  */
 export type ApiMap<
-  T extends Record<string, unknown>,
+  T extends Record<string, unknown> = Record<string, unknown>,
 > = {
-    [K in keyof T & string]: ApiMethodMap<PathParams<K>>;
-  };
+  [K in keyof T & string]: ApiMethodMap<PathParams<K>>;
+};
 
 /**
  * Type inference for the API map.
- * 
+ *
  * TODO(d2verb): I want to trigger a type error if the path is invalid, but I don't know how to do it.
  */
 export function defineApi<T extends Record<string, unknown>>(
