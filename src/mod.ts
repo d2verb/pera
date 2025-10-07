@@ -42,13 +42,4 @@ export async function serve<
   return serveImpl(App, opts);
 }
 
-export type {
-  ApiContext,
-  ApiFn,
-  ApiMap,
-  ApiMethod,
-  ApiMethodMap,
-  PathParams,
-} from "./api.ts";
-export { defineApi } from "./api.ts";
 export type { PeraOptions };

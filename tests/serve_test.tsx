@@ -1,6 +1,6 @@
 import { assertEquals, assertMatch } from "@std/assert";
 import { delay } from "@std/async";
-import { defineApi, serve } from "../src/mod.ts";
+import { serve } from "../src/mod.ts";
 
 const App = () => {
   return <div>Hello, World!</div>;
@@ -17,11 +17,12 @@ Deno.test.beforeEach(async () => {
     title: "Test Server",
     moduleUrl: import.meta.url,
     props: { initial: 7 },
-    api: defineApi({
-      "/users/:name": {
-        GET: (_, ctx) => new Response(`Hello, ${ctx.params.name}!`),
-      },
-    }),
+    api: (app) => {
+      app.get(
+        "/users/:name",
+        (c) => new Response(`Hello, ${c.req.param("name")}!`),
+      );
+    },
     signal: controller.signal,
   });
   await delay(100);
@@ -49,14 +50,14 @@ Deno.test("serve() responds to GET /_pera/api/*", async () => {
     `http://localhost:${port}/_pera/api/not-found`,
   );
   assertEquals(resApiNotFound.status, 404);
-  assertEquals(await resApiNotFound.text(), "Endpoint not found");
+  await resApiNotFound.text();
 
   const resApiMethodNotAllowed = await fetch(
     `http://localhost:${port}/_pera/api/users/deno`,
     { method: "POST" },
   );
-  assertEquals(resApiMethodNotAllowed.status, 405);
-  assertEquals(await resApiMethodNotAllowed.text(), "Method not allowed");
+  assertEquals(resApiMethodNotAllowed.status, 404);
+  await resApiMethodNotAllowed.text();
 });
 
 Deno.test("serve() responds to GET /_pera/hmr", async () => {
