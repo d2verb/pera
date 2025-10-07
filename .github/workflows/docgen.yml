@@ -17,18 +17,18 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: docs
     steps:
       - uses: actions/checkout@v5
       - uses: denoland/setup-deno@v2
       - name: Install dependencies
+        working-directory: docs
         run: deno install
       - name: Generate documentation
+        working-directory: docs
         run: deno run build
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
+        working-directory: docs
         with:
           path: .vitepress/dist
   deploy:
