@@ -3,6 +3,7 @@
   "version": "0.0.13",
   "license": "MIT",
   "tasks": {
+    "test": "deno test -A --coverage=coverage",
     "configure-lefthook": "lefthook install"
   },
   "nodeModulesDir": "auto",

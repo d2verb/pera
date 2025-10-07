@@ -67,18 +67,22 @@ export function serveImpl<
     }
 
     if (url.pathname === "/_pera/hmr") {
+      let watcher: Deno.FsWatcher | undefined;
       const stream = new ReadableStream({
         async start(controller) {
           const enc = new TextEncoder();
           controller.enqueue(enc.encode("retry: 2000\n\n"));
-
-          for await (const ev of Deno.watchFs(appFile)) {
+          watcher = Deno.watchFs(appFile);
+          for await (const ev of watcher) {
             if (ev.kind === "modify") {
               controller.enqueue(
                 enc.encode(`event: hot-reload\ndata: hot-reload\n\n`),
               );
             }
           }
+        },
+        cancel() {
+          watcher?.close();
         },
       });
       return new Response(stream, {
@@ -101,7 +105,7 @@ export function serveImpl<
       const method = req.method as ApiMethod;
       const fn = methodMap[method];
       if (!fn) {
-        return new Response("Method not found", { status: 405 });
+        return new Response("Method not allowed", { status: 405 });
       }
 
       if (fn.length > 2) {

@@ -13,16 +13,17 @@ import type { PeraApp, PeraOptions } from "./types.ts";
  * ```
  *
  * @example With API
+ * You should use defineApi() to define your API endpoints — it helps TypeScript infer the types of path parameters automatically.
  * ```ts
  * await serve(App, {
  *   port: 8080,
  *   moduleUrl: import.meta.url,
- *   api: {
+ *   api: defineApi({
  *     // The actual path is `/_pera/api/students/:name`
  *     "/students/:name": {
  *       GET: (_, ctx) => new Response(`Hello, ${ctx.params.name}!`),
  *     },
- *   },
+ *   }),
  * });
  * ```
  *
