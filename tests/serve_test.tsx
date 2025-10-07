@@ -1,27 +1,25 @@
 import { assertEquals, assertMatch } from "@std/assert";
 import { delay } from "@std/async";
-import { defineApi, serve } from "../src/mod.ts";
-
-const App = () => {
-  return <div>Hello, World!</div>;
-};
+import { serve } from "../src/mod.ts";
+import { App } from "./sample-app.tsx";
 
 const port: number = 9090;
 let finished: Promise<void>;
 let controller: AbortController;
 
 Deno.test.beforeEach(async () => {
+  const sampleAppFile = new URL("sample-app.tsx", import.meta.url);
   controller = new AbortController();
   finished = serve(App, {
     port,
     title: "Test Server",
-    moduleUrl: import.meta.url,
-    props: { initial: 7 },
-    api: defineApi({
-      "/users/:name": {
-        GET: (_, ctx) => new Response(`Hello, ${ctx.params.name}!`),
-      },
-    }),
+    moduleUrl: sampleAppFile.href,
+    api: (app) => {
+      app.get(
+        "/users/:name",
+        (c) => new Response(`Hello, ${c.req.param("name")}!`),
+      );
+    },
     signal: controller.signal,
   });
   await delay(100);
@@ -49,14 +47,14 @@ Deno.test("serve() responds to GET /_pera/api/*", async () => {
     `http://localhost:${port}/_pera/api/not-found`,
   );
   assertEquals(resApiNotFound.status, 404);
-  assertEquals(await resApiNotFound.text(), "Endpoint not found");
+  await resApiNotFound.text();
 
   const resApiMethodNotAllowed = await fetch(
     `http://localhost:${port}/_pera/api/users/deno`,
     { method: "POST" },
   );
-  assertEquals(resApiMethodNotAllowed.status, 405);
-  assertEquals(await resApiMethodNotAllowed.text(), "Method not allowed");
+  assertEquals(resApiMethodNotAllowed.status, 404);
+  await resApiMethodNotAllowed.text();
 });
 
 Deno.test("serve() responds to GET /_pera/hmr", async () => {
@@ -72,5 +70,11 @@ Deno.test("serve() responds to GET /_pera/hmr", async () => {
 });
 
 Deno.test("serve() responds to GET /_pera/app.js", async () => {
-  // TODO(d2verb): Implement this test
+  const resAppJs = await fetch(`http://localhost:${port}/_pera/app.js`);
+  assertEquals(resAppJs.status, 200);
+  assertEquals(
+    resAppJs.headers.get("content-type"),
+    "application/javascript; charset=utf-8",
+  );
+  await resAppJs.text();
 });
