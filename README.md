@@ -31,7 +31,7 @@ import { useEffect, useState } from "https://esm.sh/preact@10.27.2/hooks";
 import {
   defineApi,
   serve,
-} from "https://esm.sh/jsr/@d2verb/pera?deps=preact@10.27.2,preact-render-to-string@6.6.2";
+} from "https://esm.sh/jsr/@d2verb/pera?deps=preact@10.27.2";
 
 type Props = { initial?: number };
 
