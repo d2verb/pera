@@ -5,6 +5,7 @@ import { dirname } from "@std/path";
 import { renderToString } from "preact-render-to-string";
 import { h } from "preact";
 import { Hono } from "@hono/hono";
+import { logger } from "@hono/hono/logger";
 
 /**
  * The implementation of the serve() function.
@@ -23,8 +24,13 @@ export async function serveImpl<
   const rootId = opts.rootId ?? "root";
   const appFile = filePathFromModuleUrl(opts.moduleUrl);
   const hmr = opts.hmr ?? true;
+  const logging = opts.logging ?? false;
 
   const app = new Hono();
+
+  if (logging) {
+    app.use(logger());
+  }
 
   app.get("/_pera/app.js", async () => {
     try {

@@ -71,7 +71,7 @@ export function App() {
 
     try {
       const response = await fetch(
-        `https://pokeapi.co/api/v2/pokemon/${name.toLowerCase()}`,
+        `/_pera/api/pokemon/${name.toLowerCase()}`,
       );
 
       if (!response.ok) {
@@ -371,5 +371,32 @@ await serve(App, {
   port: 8080,
   title: "Pokédex - pera Sample",
   moduleUrl: import.meta.url,
-  props: {},
+  logging: true,
+  api: (app) => {
+    // GET /api/pokemon/:name - Fetch Pokemon data from PokeAPI
+    app.get("/pokemon/:name", async (c) => {
+      const name = c.req.param("name");
+
+      try {
+        const response = await fetch(
+          `https://pokeapi.co/api/v2/pokemon/${name.toLowerCase()}`,
+        );
+
+        if (!response.ok) {
+          if (response.status === 404) {
+            return c.json({ error: `Pokémon "${name}" not found` }, 404);
+          }
+          return c.json(
+            { error: `Failed to fetch Pokémon data: ${response.status}` },
+            response.status,
+          );
+        }
+
+        const pokemonData = await response.json();
+        return c.json(pokemonData);
+      } catch {
+        return c.json({ error: "An unexpected error occurred" }, 500);
+      }
+    });
+  },
 });
