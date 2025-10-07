@@ -33,4 +33,13 @@ jobs:
       - name: Install dependencies
         run: deno install
       - name: Test
-        run: deno test -A
+        run: deno test -A --coverage=coverage
+      - name: Generate lcov report
+        run: deno coverage --lcov coverage/ --output=cov.lcov
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v5
+        with:
+          files: ./cov.lcov
+          fail_ci_if_error: true
+          token: ${{ secrets.CODECOV_TOKEN }}
+          slug: d2verb/pera
