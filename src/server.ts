@@ -36,7 +36,7 @@ export async function serveImpl<
     try {
       const origCode = await Deno.readTextFile(appFile);
       const autoExports =
-        '\n\nexport { h, render } from "https://esm.sh/preact@10.27.2";\n';
+        '\n\nexport { h, hydrate } from "https://esm.sh/preact@10.27.2";\n';
       const codeToBundle = origCode + autoExports;
 
       const tempFile = await Deno.makeTempFile({
@@ -113,12 +113,10 @@ export async function serveImpl<
         </head>
         <body>
           <div id="${rootId}">${ssr}</div>
-          <script>window.__PERA_PROPS__ = ${propsStr}</script>
           <script type="module">
-            import { App, h, render } from "/_pera/app.js";
+            import { App, h, hydrate } from "/_pera/app.js";
             const el = document.getElementById("${rootId}");
-            const props = window.__PERA_PROPS__ ?? {};
-            render(h(App, props), el);
+            hydrate(h(App, ${propsStr}), el);
             if (${hmr}) {
               const es = new EventSource("/_pera/hmr");
               es.addEventListener("hot-reload", () => {
