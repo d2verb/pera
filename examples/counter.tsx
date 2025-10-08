@@ -54,4 +54,5 @@ await serve(App, {
       (c) => new Response(`Hello, ${c.req.param("name")}!`),
     );
   },
+  logging: true,
 });
