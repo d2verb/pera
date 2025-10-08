@@ -9,6 +9,7 @@ const MANUAL = {
 export default {
   title: "Pera",
   description: "Running frontend code with only a single .tsx file",
+  base: "/pera/",
   ignoreDeadLinks: [
     /^https?:\/\/localhost/,
   ],
@@ -22,6 +23,9 @@ export default {
     ],
     sidebar: [
       MANUAL,
+    ],
+    socialLinks: [
+      { icon: "github", link: "https://github.com/d2verb/pera" },
     ],
   },
 };
