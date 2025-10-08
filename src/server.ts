@@ -1,4 +1,4 @@
-import { escapeHtml, filePathFromModuleUrl } from "./utils.ts";
+import { escapeHtml, filePathFromModuleUrl, isProduction } from "./utils.ts";
 import type { PeraApp, PeraOptions } from "./types.ts";
 import { bundle } from "@deno/emit";
 import { dirname } from "@std/path";
@@ -23,7 +23,7 @@ export async function serveImpl<
   const title = opts.title ?? "Pera App";
   const rootId = opts.rootId ?? "root";
   const appFile = filePathFromModuleUrl(opts.moduleUrl);
-  const hmr = opts.hmr ?? true;
+  const hmr = isProduction() ? false : (opts.hmr ?? true);
   const logging = opts.logging ?? false;
 
   const app = new Hono();
@@ -99,7 +99,7 @@ export async function serveImpl<
     });
   });
 
-  app.get("/", () => {
+  app.get("/", (c) => {
     const ssr = renderToString(h(App, opts.props ?? null));
     const propsStr = JSON.stringify(opts.props ?? {});
     const html = `
@@ -128,10 +128,7 @@ export async function serveImpl<
         </body>
       </html>
     `;
-
-    return new Response(html, {
-      headers: { "content-type": "text/html; charset=utf-8" },
-    });
+    return c.html(html);
   });
 
   if (opts.api) {

@@ -17,7 +17,7 @@ export type PeraOptions<
   moduleUrl: string;
   /** The ID of the root element to render the App component into. (Default: "root") */
   rootId?: string;
-  /** Whether to enable hot module replacement. (Default: true) */
+  /** Whether to enable hot module replacement. Disabled automatically in production. (Default: true) */
   hmr?: boolean;
   /** The function to register the API endpoints. (Default: undefined) */
   api?: (app: Hono) => void | Promise<void>;

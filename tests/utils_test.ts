@@ -1,5 +1,9 @@
 import { assertEquals, assertThrows } from "@std/assert";
-import { escapeHtml, filePathFromModuleUrl } from "../src/utils.ts";
+import {
+  escapeHtml,
+  filePathFromModuleUrl,
+  isProduction,
+} from "../src/utils.ts";
 
 Deno.test("escapeHtml escapes HTML characters", () => {
   assertEquals(escapeHtml("Hello & World"), "Hello &amp; World");
@@ -31,4 +35,20 @@ Deno.test("filePathFromModuleUrl throws error for non-file URLs", () => {
     Error,
     "Invalid module URL: http://example.com/test.ts",
   );
+});
+
+Deno.test("isProduction returns true in production", () => {
+  assertEquals(isProduction(), false);
+
+  Deno.env.set("NODE_ENV", "production");
+  assertEquals(isProduction(), true);
+  Deno.env.delete("NODE_ENV");
+
+  Deno.env.set("DENO_ENV", "production");
+  assertEquals(isProduction(), true);
+  Deno.env.delete("DENO_ENV");
+
+  Deno.env.set("DENO_DEPLOY", "1");
+  assertEquals(isProduction(), true);
+  Deno.env.delete("DENO_DEPLOY");
 });

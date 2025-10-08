@@ -14,3 +14,9 @@ export function filePathFromModuleUrl(moduleUrl: string): string {
   }
   return u.pathname;
 }
+
+export function isProduction(): boolean {
+  return Deno.env.get("NODE_ENV") === "production" ||
+    Deno.env.get("DENO_ENV") === "production" ||
+    Deno.env.get("DENO_DEPLOY") === "1";
+}
