@@ -20,3 +20,12 @@ export function isProduction(): boolean {
     Deno.env.get("DENO_ENV") === "production" ||
     Deno.env.get("DENO_DEPLOY") === "1";
 }
+
+export async function fileExists(path: string) {
+  try {
+    await Deno.stat(path);
+    return true;
+  } catch {
+    return false;
+  }
+}
