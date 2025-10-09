@@ -1,6 +1,7 @@
 import { assertEquals, assertThrows } from "@std/assert";
 import {
   escapeHtml,
+  fileExists,
   filePathFromModuleUrl,
   isProduction,
 } from "../src/utils.ts";
@@ -51,4 +52,17 @@ Deno.test("isProduction returns true in production", () => {
   Deno.env.set("DENO_DEPLOY", "1");
   assertEquals(isProduction(), true);
   Deno.env.delete("DENO_DEPLOY");
+});
+
+Deno.test("fileExists returns true if file exists", async () => {
+  const dir = await Deno.makeTempDir();
+  const filePath = `${dir}/test.txt`;
+  await Deno.writeTextFile(filePath, "test");
+  assertEquals(await fileExists(filePath), true);
+});
+
+Deno.test("fileExists returns false if file does not exist", async () => {
+  const dir = await Deno.makeTempDir();
+  const filePath = `${dir}/test.txt`;
+  assertEquals(await fileExists(filePath), false);
 });
