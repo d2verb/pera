@@ -25,6 +25,7 @@ export async function serveImpl<
   const appFile = filePathFromModuleUrl(opts.moduleUrl);
   const hmr = isProduction() ? false : (opts.hmr ?? true);
   const logging = opts.logging ?? false;
+  const imports = opts.imports ?? {};
 
   const app = new Hono();
 
@@ -48,7 +49,12 @@ export async function serveImpl<
       try {
         await Deno.writeTextFile(tempFile, codeToBundle);
         const url = new URL("file://" + tempFile);
-        const result = await bundle(url);
+        const result = await bundle(url, {
+          minify: true,
+          importMap: {
+            imports,
+          },
+        });
         return new Response(result.code, {
           headers: {
             "content-type": "application/javascript; charset=utf-8",
