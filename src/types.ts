@@ -25,6 +25,8 @@ export type PeraOptions<
   signal?: AbortSignal;
   /** Whether to enable logging. (Default: false) */
   logging?: boolean;
+  /** The import map to use for the bundling in server. (Default: {}) */
+  imports?: Record<string, string>;
 };
 
 export type PeraApp<
