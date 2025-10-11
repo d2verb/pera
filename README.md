@@ -99,4 +99,4 @@ Open your browser at http://localhost:8080 and see your Preact app running.
 
 ## License
 
-MIT
+This project is licensed under the [MIT License](./LICENSE).
