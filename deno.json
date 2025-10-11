@@ -1,6 +1,6 @@
 {
   "name": "@d2verb/pera",
-  "version": "0.0.15",
+  "version": "0.0.16-rc.1",
   "license": "MIT",
   "tasks": {
     "test": "deno test -A --coverage=coverage",
