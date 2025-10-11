@@ -1,4 +1,4 @@
-import { assertEquals, assertMatch } from "@std/assert";
+import { assertEquals, assertMatch, assertStringIncludes } from "@std/assert";
 import { fileExists } from "../src/utils.ts";
 
 const DEFAULT_FILENAME = "app.tsx";
@@ -28,6 +28,24 @@ function checkGeneratedFileContent(content: string) {
   );
   assertMatch(content, /await serve/);
 }
+
+Deno.test("[cli] cli will show help if no arguments are provided", async () => {
+  const dir = await Deno.makeTempDir();
+  const cliPath = new URL("../src/cli.ts", import.meta.url).href;
+  const p = new Deno.Command(Deno.execPath(), {
+    args: ["run", "-A", cliPath],
+    cwd: dir,
+    stdout: "piped",
+  }).spawn();
+
+  const { code, stdout } = await p.output();
+  assertEquals(code, 0);
+  assertStringIncludes(new TextDecoder().decode(stdout), "Usage:");
+  assertStringIncludes(new TextDecoder().decode(stdout), "Version:");
+  assertStringIncludes(new TextDecoder().decode(stdout), "Description:");
+  assertStringIncludes(new TextDecoder().decode(stdout), "Options:");
+  assertStringIncludes(new TextDecoder().decode(stdout), "Commands:");
+});
 
 Deno.test("[cli] new generates tsx file (default filename)", async () => {
   const dir = await Deno.makeTempDir();
