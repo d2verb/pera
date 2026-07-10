@@ -15,6 +15,9 @@ single `.tsx` file. The name pera comes from the Japanese word "ペライチ"
 - 🧩 Minimal API – only one function: serve()
 - 📝 Write plain TSX – no config, just /** @jsxImportSource ... */
 
+tesst
+test
+
 ## Quick Start
 
 ```bash
@@ -83,7 +86,7 @@ await serve(App, {
 });
 ```
 
-Open your browser at http://localhost:8080 and see your Preact app running.
+Open your browser at <http://localhost:8080> and see your Preact app running.
 
 ## Use Cases
 
